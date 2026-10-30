@@ -100,7 +100,6 @@ Trade-off: last write wins can silently drop an edit, and it trusts device clock
 - **Caretaker from Contacts**: pick a phone entry for a site, and call it from the site sheet. It uses `ACTION_PICK`, which grants one-off access to the chosen row, so the app never asks for the Contacts permission. It is a normal site edit, so it goes through sync and conflict handling.
 - **WorkManager background sync**: a periodic job (15 minutes, the platform minimum) with a network constraint and exponential backoff. It does nothing when signed out. Workers are built through a Hilt-injected `WorkerFactory`.
 - **Dark mode**: a full green Material 3 scheme for light and dark, following the system setting.
-- **GitHub Actions**: `.github/workflows/android.yml` runs unit tests and builds the debug APK on every push.
 - Room schema moved from v1 to v3 with explicit migrations (no destructive fallback); the schema JSON files are committed.
 
 ## What I cut, and why
