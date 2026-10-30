@@ -65,6 +65,10 @@ fun NewSiteScreen(onBack: () -> Unit, viewModel: NewSiteViewModel = hiltViewMode
     // Frame the user once on the first fix; after that the map is theirs to pan.
     val hasFix = location != null
     LaunchedEffect(hasFix) { location?.let { camera = CameraCommand(CameraTarget.Center(it.latLng)) } }
+    val knownPoints by viewModel.knownPoints.collectAsStateWithLifecycle()
+    LaunchedEffect(knownPoints.isNotEmpty()) {
+        if (camera == null && knownPoints.isNotEmpty()) camera = CameraCommand(CameraTarget.Fit(knownPoints))
+    }
     LaunchedEffect(viewModel) { viewModel.saved.collect { onBack() } }
 
     Scaffold(
