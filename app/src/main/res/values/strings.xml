@@ -111,4 +111,7 @@
     <string name="walk_mode">Walk mode</string>
     <string name="walk_mode_on">Walk mode on: walk the boundary</string>
     <string name="walk_poor_fix">Waiting for a better GPS fix (needs %1$d m or better)</string>
+    <string name="inspection_attachments">Attachments</string>
+    <string name="add_attachment">Attach a file</string>
+    <string name="remove_attachment">Remove attachment</string>
 </resources>

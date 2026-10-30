@@ -1,6 +1,7 @@
 package com.keval.fieldpintask.data.repository
 
 import androidx.room.withTransaction
+import com.keval.fieldpintask.data.AttachmentStore
 import com.keval.fieldpintask.data.PhotoStore
 import com.keval.fieldpintask.data.local.FieldPinDatabase
 import com.keval.fieldpintask.data.remote.FieldPinApi
@@ -19,6 +20,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val sessionStore: SessionStore,
     private val database: FieldPinDatabase,
     private val photoStore: PhotoStore,
+    private val attachmentStore: AttachmentStore,
 ) : AuthRepository {
 
     override val session: Flow<Session?> = sessionStore.session
@@ -40,6 +42,7 @@ class AuthRepositoryImpl @Inject constructor(
             database.inspectionDao().clear()
         }
         photoStore.clear()
+        attachmentStore.clear()
         sessionStore.clear()
     }
 }

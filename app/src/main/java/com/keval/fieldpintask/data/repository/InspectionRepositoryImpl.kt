@@ -36,6 +36,7 @@ class InspectionRepositoryImpl @Inject constructor(
                     notes = inspection.notes.trim(),
                     photoPaths = inspection.photoPaths,
                     syncState = SyncState.PENDING,
+                    attachmentPaths = inspection.attachmentPaths,
                 ).toEntity(),
             )
             val site = database.siteDao().getById(inspection.siteId) ?: return@withTransaction

@@ -1,8 +1,10 @@
 package com.keval.fieldpintask.ui.inspection
 
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.keval.fieldpintask.data.AttachmentStore
 import com.keval.fieldpintask.domain.gis.LatLng
 import com.keval.fieldpintask.domain.location.DeviceLocation
 import com.keval.fieldpintask.domain.location.LocationProvider
@@ -17,6 +19,7 @@ import com.keval.fieldpintask.domain.usecase.CheckInUseCase
 import com.keval.fieldpintask.ui.navigation.Routes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,6 +30,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 sealed interface CheckInState {
     data object Locating : CheckInState
@@ -41,6 +45,7 @@ data class InspectionUiState(
     val status: SiteStatus = SiteStatus.ACTIVE,
     val notes: String = "",
     val photos: List<String> = emptyList(),
+    val attachments: List<String> = emptyList(),
     val isSubmitting: Boolean = false,
 ) {
     val canSubmit: Boolean get() = site != null && checkIn is CheckInState.CheckedIn && !isSubmitting
@@ -53,6 +58,7 @@ class InspectionViewModel @Inject constructor(
     private val inspectionRepository: InspectionRepository,
     private val locationProvider: LocationProvider,
     private val checkInUseCase: CheckInUseCase,
+    private val attachmentStore: AttachmentStore,
 ) : ViewModel() {
     val siteId: String = checkNotNull(savedStateHandle[Routes.ARG_SITE_ID])
 
@@ -68,6 +74,15 @@ class InspectionViewModel @Inject constructor(
             _state.update { it.copy(site = site, status = site.status) }
         }
     }
+
+    fun addAttachment(uri: Uri) {
+        viewModelScope.launch {
+            val path = withContext(Dispatchers.IO) { attachmentStore.import(uri) } ?: return@launch
+            _state.update { it.copy(attachments = it.attachments + path) }
+        }
+    }
+
+    fun removeAttachment(path: String) = _state.update { it.copy(attachments = it.attachments - path) }
 
     fun addPhoto(path: String) = _state.update { it.copy(photos = it.photos + path) }
 
@@ -109,6 +124,7 @@ class InspectionViewModel @Inject constructor(
                     condition = current.condition,
                     notes = current.notes,
                     photoPaths = current.photos,
+                    attachmentPaths = current.attachments,
                     siteStatus = current.status,
                 ),
             )

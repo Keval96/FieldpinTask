@@ -36,6 +36,7 @@ data class Inspection(
     val notes: String,
     val photoPaths: List<String>,
     val syncState: SyncState,
+    val attachmentPaths: List<String> = emptyList(),
 )
 
 data class Session(val token: String, val email: String, val displayName: String)

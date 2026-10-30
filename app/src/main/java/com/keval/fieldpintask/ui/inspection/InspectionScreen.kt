@@ -1,6 +1,8 @@
 package com.keval.fieldpintask.ui.inspection
 
 import androidx.compose.foundation.clickable
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddAPhoto
+import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -28,6 +31,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -38,6 +42,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -57,6 +62,7 @@ import com.keval.fieldpintask.ui.common.label
 import com.keval.fieldpintask.ui.common.rememberLocationServicesEnabled
 import com.keval.fieldpintask.ui.common.rememberPermissionRequester
 import kotlinx.coroutines.flow.emptyFlow
+import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,6 +74,7 @@ fun InspectionScreen(
     viewModel: InspectionViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val filePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri -> uri?.let(viewModel::addAttachment) }
     val permission = rememberPermissionRequester(LOCATION_PERMISSIONS)
     val locationServicesOn = rememberLocationServicesEnabled()
     val canLocate = permission.isGranted && locationServicesOn
@@ -152,6 +159,22 @@ fun InspectionScreen(
                             }
                         }
                     }
+                }
+            }
+
+            Section(R.string.inspection_attachments, count = state.attachments.size) {
+                state.attachments.forEach { path ->
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Filled.AttachFile, contentDescription = null, modifier = Modifier.size(20.dp))
+                        Text(File(path).name, Modifier.weight(1f).padding(horizontal = 8.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        IconButton(onClick = { viewModel.removeAttachment(path) }) {
+                            Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.remove_attachment))
+                        }
+                    }
+                }
+                OutlinedButton(onClick = { filePicker.launch(arrayOf("*/*")) }) {
+                    Icon(Icons.Filled.AttachFile, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Text(stringResource(R.string.add_attachment), Modifier.padding(start = 8.dp))
                 }
             }
 

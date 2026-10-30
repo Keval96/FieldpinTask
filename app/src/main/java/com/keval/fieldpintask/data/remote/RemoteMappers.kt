@@ -58,4 +58,5 @@ internal fun InspectionEntity.toDto() = InspectionDto(
     condition = condition,
     notes = notes,
     photoCount = if (photoPaths.isEmpty()) 0 else photoPaths.split("\n").size,
+    attachmentCount = if (attachmentPaths.isEmpty()) 0 else attachmentPaths.split("\n").size,
 )

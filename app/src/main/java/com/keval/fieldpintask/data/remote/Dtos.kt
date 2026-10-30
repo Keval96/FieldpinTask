@@ -37,6 +37,7 @@ data class InspectionDto(
     val condition: String,
     val notes: String,
     val photoCount: Int,
+    val attachmentCount: Int = 0,
 )
 
 @Serializable

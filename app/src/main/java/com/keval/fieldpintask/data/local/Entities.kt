@@ -1,5 +1,6 @@
 package com.keval.fieldpintask.data.local
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -31,4 +32,5 @@ data class InspectionEntity(
     val notes: String,
     val photoPaths: String,
     val syncState: String,
+    @ColumnInfo(defaultValue = "''") val attachmentPaths: String = "",
 )

@@ -19,6 +19,8 @@ internal fun decodeBoundary(encoded: String): List<LatLng> =
         LatLng(lat.toDouble(), lng.toDouble())
     }
 
+private fun decodePaths(encoded: String): List<String> = if (encoded.isEmpty()) emptyList() else encoded.split(PATH_SEPARATOR)
+
 internal fun SiteEntity.toDomain() = Site(
     id = id,
     name = name,
@@ -55,8 +57,9 @@ internal fun InspectionEntity.toDomain() = Inspection(
     accuracyM = accuracyM,
     condition = Condition.valueOf(condition),
     notes = notes,
-    photoPaths = if (photoPaths.isEmpty()) emptyList() else photoPaths.split(PATH_SEPARATOR),
+    photoPaths = decodePaths(photoPaths),
     syncState = SyncState.valueOf(syncState),
+    attachmentPaths = decodePaths(attachmentPaths),
 )
 
 internal fun Inspection.toEntity() = InspectionEntity(
@@ -70,4 +73,5 @@ internal fun Inspection.toEntity() = InspectionEntity(
     notes = notes,
     photoPaths = photoPaths.joinToString(PATH_SEPARATOR),
     syncState = syncState.name,
+    attachmentPaths = attachmentPaths.joinToString(PATH_SEPARATOR),
 )

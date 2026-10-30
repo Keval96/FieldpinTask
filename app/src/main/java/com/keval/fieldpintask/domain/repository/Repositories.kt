@@ -30,6 +30,7 @@ data class NewInspection(
     val notes: String,
     val photoPaths: List<String>,
     val siteStatus: SiteStatus,
+    val attachmentPaths: List<String> = emptyList(),
 )
 
 interface InspectionRepository {
