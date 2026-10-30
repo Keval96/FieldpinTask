@@ -106,7 +106,8 @@ Time went into the six required features and testing them on a device. Not done:
 
 ## Next steps
 
-Scaling the map to thousands of sites: query only the sites in the visible bounds from Room, simplify polygons at low zoom, and cluster markers instead of drawing every outline. 
+Scaling the map to thousands of sites: query only the sites in the visible bounds from Room, simplify polygons at low zoom, and cluster markers instead of drawing every outline.
+
 Field-level merge and a conflict screen, WorkManager sync with backoff, offline tile packs, a real backend, photo upload during sync, instrumented tests for the check-in flow, and a proper dark theme.
 
 ## AI use
