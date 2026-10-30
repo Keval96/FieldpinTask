@@ -87,6 +87,15 @@ Trade-off: last write wins can silently drop an edit, and it trusts device clock
 - `kotlinx-serialization` 1.9.0 and coroutines 1.10.2 are pinned on purpose: newer ones pull a Kotlin 2.4 stdlib that this toolchain cannot read.
 - Base URLs, tile URL and demo credentials are `BuildConfig` fields per build type, not strings in Kotlin.
 
+## Libraries and sources
+
+- UI and app plumbing: Jetpack Compose with Material 3, Navigation Compose, Lifecycle, DataStore, Hilt.
+- Data: Room (local storage), Retrofit and OkHttp (the network layer, answered by the in-process fake server), kotlinx.serialization and coroutines.
+- Device: CameraX for the camera, Google Play services Fused Location (with a plain `LocationManager` fallback), ExifInterface for photo rotation.
+- Map: MapLibre Native, with OpenStreetMap raster tiles. Map data is (c) OpenStreetMap contributors (ODbL).
+- Algorithms: the spherical polygon area formula of Chamberlain and Duquette, the haversine distance formula, and the ray casting point-in-polygon test are standard published methods, implemented in `domain/gis/GeoMath.kt`.
+- I did not knowingly copy code from other projects or samples. Where an AI tool drafted code, it is covered in the AI use section below.
+
 ## Tests
 
 `./gradlew testDebugUnitTest` runs 33 unit tests: area, perimeter, distance, point in polygon, edge cases and self-intersection (`GeoMathTest`); seed data validity; the sync merge and conflict rules; check-in decision; stamp text.
@@ -97,6 +106,7 @@ Time went into the six required features and testing them on a device. Not done:
 
 ## Next steps
 
+Scaling the map to thousands of sites: query only the sites in the visible bounds from Room, simplify polygons at low zoom, and cluster markers instead of drawing every outline. 
 Field-level merge and a conflict screen, WorkManager sync with backoff, offline tile packs, a real backend, photo upload during sync, instrumented tests for the check-in flow, and a proper dark theme.
 
 ## AI use
