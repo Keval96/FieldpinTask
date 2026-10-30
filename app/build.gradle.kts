@@ -43,6 +43,8 @@ android {
             }
         }
         all {
+            buildConfigField("String", "DEMO_EMAIL", "\"${configValue("FIELDPIN_DEMO_EMAIL", "demo@fieldpin.app")}\"")
+            buildConfigField("String", "DEMO_PASSWORD", "\"${configValue("FIELDPIN_DEMO_PASSWORD", "Field@123")}\"")
             buildConfigField("String", "TILE_URL_TEMPLATE", "\"${configValue("FIELDPIN_TILE_URL", "https://tile.openstreetmap.org/{z}/{x}/{y}.png")}\"")
         }
     }
