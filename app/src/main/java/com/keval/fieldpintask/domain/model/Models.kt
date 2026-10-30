@@ -39,3 +39,5 @@ data class Inspection(
 )
 
 data class Session(val token: String, val email: String, val displayName: String)
+
+val SITE_CATEGORIES = listOf("Park", "Lake", "Water tank", "Solar installation", "Heritage", "Stadium", "Ground", "Other")

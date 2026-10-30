@@ -62,4 +62,47 @@
     <string name="sheet_distance_unknown">Distance unavailable until location is on</string>
     <string name="start_inspection">Start inspection</string>
     <string name="checkin_disabled_hint">Check-in needs you to be inside the site</string>
+
+    <string name="back">Back</string>
+    <string name="undo">Undo</string>
+
+    <!-- New site -->
+    <string name="new_site_title">Map a new site</string>
+    <string name="new_site_points">%1$d points</string>
+    <string name="new_site_area">Area: %1$s</string>
+    <string name="new_site_perimeter">Perimeter: %1$d m</string>
+    <string name="new_site_hint">Tap the map to place at least 3 corners</string>
+    <string name="new_site_accuracy">GPS accuracy: %1$d m</string>
+    <string name="new_site_crossing">The boundary crosses itself. Fix the corners to save.</string>
+    <string name="new_site_add_gps">Add my location</string>
+    <string name="new_site_save">Save site</string>
+    <string name="new_site_dialog_title">Name this site</string>
+    <string name="new_site_name">Site name</string>
+    <string name="new_site_permission_title">Use your position</string>
+    <string name="new_site_permission_message">Allow location to centre the map on you and add corners from your GPS position. You can still place corners by tapping.</string>
+
+    <!-- Inspection -->
+    <string name="checkin_permission_title">Location needed to check in</string>
+    <string name="checkin_permission_message">FieldPin confirms you are physically inside the site before an inspection can start. Your location is only read while this screen is open.</string>
+    <string name="checkin_locating">Finding your position…</string>
+    <string name="checkin_outside">You are %1$s outside the site. Move inside to check in.</string>
+    <string name="checkin_done">Checked in at %1$s (±%2$d m)</string>
+    <string name="inspection_condition">Condition</string>
+    <string name="inspection_status">Site status</string>
+    <string name="inspection_photos">Photos</string>
+    <string name="inspection_notes">Notes</string>
+    <string name="inspection_submit">Submit inspection</string>
+    <string name="condition_good">Good</string>
+    <string name="condition_fair">Fair</string>
+    <string name="condition_poor">Poor</string>
+    <string name="add_photo">Add photo</string>
+    <string name="remove_photo">Remove photo</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_title">Camera access</string>
+    <string name="camera_permission_message">FieldPin takes inspection photos in the app and stamps the site, position and time into each one.</string>
+    <string name="camera_waiting_gps">Waiting for GPS to stamp the photo…</string>
+    <string name="camera_failed">Could not take the photo. Try again.</string>
+    <string name="camera_flip">Flip camera</string>
+    <string name="camera_flash">Flash</string>
 </resources>
