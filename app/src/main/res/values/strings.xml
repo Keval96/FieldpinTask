@@ -25,8 +25,8 @@
 
     <!-- Sync messages -->
     <string name="sync_nothing">Everything is already synced</string>
-    <string name="sync_done">Synced %1$d sites and %2$d inspections</string>
-    <string name="sync_done_conflicts">Synced. %1$d sites changed elsewhere and were merged</string>
+    <string name="sync_done">Sync complete. Sites: %1$d, inspections: %2$d</string>
+    <string name="sync_done_conflicts">Sync complete. Sites changed elsewhere and merged: %1$d</string>
     <string name="sync_offline">You are offline. Changes will sync when you are back online.</string>
     <string name="sync_failed">Sync failed. Try again.</string>
 
