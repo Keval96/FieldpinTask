@@ -67,14 +67,9 @@ class InspectionViewModel @Inject constructor(
             val site = siteRepository.observeSite(siteId).filterNotNull().first()
             _state.update { it.copy(site = site, status = site.status) }
         }
-        // The camera screen hands the saved photo back through this entry's saved state.
-        viewModelScope.launch {
-            savedStateHandle.getStateFlow<String?>(Routes.KEY_PHOTO_PATH, null).filterNotNull().collect { path ->
-                _state.update { it.copy(photos = it.photos + path) }
-                savedStateHandle[Routes.KEY_PHOTO_PATH] = null
-            }
-        }
     }
+
+    fun addPhoto(path: String) = _state.update { it.copy(photos = it.photos + path) }
 
     fun locationUpdates(): Flow<DeviceLocation> = locationProvider.updates()
 

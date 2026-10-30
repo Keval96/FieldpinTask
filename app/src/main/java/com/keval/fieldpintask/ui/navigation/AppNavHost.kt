@@ -6,6 +6,8 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -67,9 +69,13 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
         }
         composable(Routes.INSPECTION) { entry ->
             val siteId = checkNotNull(entry.arguments?.getString(Routes.ARG_SITE_ID))
+            // The camera writes its result to this entry's own handle, not the ViewModel's.
+            val newPhoto by entry.savedStateHandle.getStateFlow<String?>(Routes.KEY_PHOTO_PATH, null).collectAsStateWithLifecycle()
             InspectionScreen(
                 onBack = { navController.popBackStack() },
                 onAddPhoto = { navController.navigate(Routes.camera(siteId)) },
+                newPhoto = newPhoto,
+                onPhotoConsumed = { entry.savedStateHandle[Routes.KEY_PHOTO_PATH] = null },
             )
         }
         composable(Routes.CAMERA) {

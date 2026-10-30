@@ -60,7 +60,13 @@ import kotlinx.coroutines.flow.emptyFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InspectionScreen(onBack: () -> Unit, onAddPhoto: () -> Unit, viewModel: InspectionViewModel = hiltViewModel()) {
+fun InspectionScreen(
+    onBack: () -> Unit,
+    onAddPhoto: () -> Unit,
+    newPhoto: String? = null,
+    onPhotoConsumed: () -> Unit = {},
+    viewModel: InspectionViewModel = hiltViewModel(),
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val permission = rememberPermissionRequester(LOCATION_PERMISSIONS)
     val locationServicesOn = rememberLocationServicesEnabled()
@@ -69,6 +75,7 @@ fun InspectionScreen(onBack: () -> Unit, onAddPhoto: () -> Unit, viewModel: Insp
     val location by locationFlow.collectAsStateWithLifecycle(initialValue = null)
 
     LaunchedEffect(location) { viewModel.onLocation(location) }
+    LaunchedEffect(newPhoto) { newPhoto?.let { viewModel.addPhoto(it); onPhotoConsumed() } }
     LaunchedEffect(viewModel) { viewModel.submitted.collect { onBack() } }
 
     Scaffold(
