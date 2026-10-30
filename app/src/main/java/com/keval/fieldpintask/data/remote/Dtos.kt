@@ -24,6 +24,8 @@ data class SiteDto(
     val lastInspectionAt: Long?,
     val version: Int,
     val updatedAt: Long,
+    val caretakerName: String? = null,
+    val caretakerPhone: String? = null,
 )
 
 @Serializable

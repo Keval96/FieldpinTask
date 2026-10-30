@@ -33,6 +33,8 @@ internal fun SiteEntity.toDomain() = Site(
     version = version,
     updatedAt = updatedAt,
     syncState = SyncState.valueOf(syncState),
+    caretakerName = caretakerName,
+    caretakerPhone = caretakerPhone,
 )
 
 internal fun Site.toEntity() = SiteEntity(
@@ -47,6 +49,8 @@ internal fun Site.toEntity() = SiteEntity(
     version = version,
     updatedAt = updatedAt,
     syncState = syncState.name,
+    caretakerName = caretakerName,
+    caretakerPhone = caretakerPhone,
 )
 
 internal fun InspectionEntity.toDomain() = Inspection(

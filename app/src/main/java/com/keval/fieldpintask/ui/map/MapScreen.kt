@@ -1,5 +1,7 @@
 package com.keval.fieldpintask.ui.map
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,15 +13,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -30,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -42,9 +46,12 @@ import com.keval.fieldpintask.ui.common.LOCATION_PERMISSIONS
 import com.keval.fieldpintask.ui.common.LocationOffCard
 import com.keval.fieldpintask.ui.common.PermissionCard
 import com.keval.fieldpintask.ui.common.color
+import com.keval.fieldpintask.ui.common.contactPickerIntent
+import com.keval.fieldpintask.ui.common.dialIntent
 import com.keval.fieldpintask.ui.common.formatArea
 import com.keval.fieldpintask.ui.common.formatDistance
 import com.keval.fieldpintask.ui.common.label
+import com.keval.fieldpintask.ui.common.readPickedContact
 import com.keval.fieldpintask.ui.common.rememberLocationServicesEnabled
 import com.keval.fieldpintask.ui.common.rememberPermissionRequester
 import com.keval.fieldpintask.ui.sites.PendingBadge
@@ -86,6 +93,7 @@ fun MapScreen(onStartInspection: (String) -> Unit, viewModel: MapViewModel = hil
                     location = userLocation,
                     onClose = viewModel::clearSelection,
                     onStartInspection = { onStartInspection(selected.id) },
+                    onCaretakerPicked = { name, phone -> viewModel.setCaretaker(selected.id, name, phone) },
                 )
             } else {
                 Box(Modifier.height(1.dp))
@@ -126,7 +134,17 @@ fun MapScreen(onStartInspection: (String) -> Unit, viewModel: MapViewModel = hil
 }
 
 @Composable
-private fun SiteSheet(site: Site, location: DeviceLocation?, onClose: () -> Unit, onStartInspection: () -> Unit) {
+private fun SiteSheet(
+    site: Site,
+    location: DeviceLocation?,
+    onClose: () -> Unit,
+    onStartInspection: () -> Unit,
+    onCaretakerPicked: (String, String) -> Unit,
+) {
+    val context = LocalContext.current
+    val contactPicker = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        result.data?.data?.let { uri -> readPickedContact(context, uri)?.let { onCaretakerPicked(it.name, it.phone) } }
+    }
     val distance = location?.let { GeoMath.distanceToPolygonMeters(it.latLng, site.boundary) }
     val isInside = distance == 0.0
     Column(
@@ -154,6 +172,20 @@ private fun SiteSheet(site: Site, location: DeviceLocation?, onClose: () -> Unit
             },
             style = MaterialTheme.typography.bodyLarge,
         )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                site.caretakerName?.let { stringResource(R.string.caretaker_value, it, site.caretakerPhone.orEmpty()) }
+                    ?: stringResource(R.string.caretaker_none),
+                Modifier.weight(1f),
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            if (!site.caretakerPhone.isNullOrBlank()) {
+                TextButton(onClick = { context.startActivity(dialIntent(site.caretakerPhone)) }) { Text(stringResource(R.string.caretaker_call)) }
+            }
+            TextButton(onClick = { contactPicker.launch(contactPickerIntent()) }) {
+                Text(stringResource(if (site.caretakerName == null) R.string.caretaker_set else R.string.caretaker_change))
+            }
+        }
         Button(onClick = onStartInspection, enabled = isInside, modifier = Modifier.fillMaxWidth().height(48.dp)) {
             Text(stringResource(R.string.start_inspection))
         }

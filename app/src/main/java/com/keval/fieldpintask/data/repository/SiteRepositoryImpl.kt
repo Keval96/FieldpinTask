@@ -48,6 +48,18 @@ class SiteRepositoryImpl @Inject constructor(private val siteDao: SiteDao) : Sit
         return site
     }
 
+    override suspend fun setCaretaker(siteId: String, name: String?, phone: String?) {
+        val site = siteDao.getById(siteId) ?: return
+        siteDao.upsert(
+            site.copy(
+                caretakerName = name,
+                caretakerPhone = phone,
+                updatedAt = System.currentTimeMillis(),
+                syncState = SyncState.PENDING.name,
+            ),
+        )
+    }
+
     private companion object {
         const val MIN_POINTS = 3
     }

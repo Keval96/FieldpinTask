@@ -18,6 +18,8 @@ data class SiteEntity(
     val version: Int,
     val updatedAt: Long,
     val syncState: String,
+    val caretakerName: String? = null,
+    val caretakerPhone: String? = null,
 )
 
 @Entity(tableName = "inspections", indices = [Index("siteId")])

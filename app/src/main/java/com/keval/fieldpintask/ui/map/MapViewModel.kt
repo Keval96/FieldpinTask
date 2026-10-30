@@ -12,6 +12,7 @@ import com.keval.fieldpintask.domain.repository.SiteRepository
 import com.keval.fieldpintask.ui.navigation.Routes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,7 +25,7 @@ data class MapUiState(val sites: List<Site> = emptyList(), val selected: Site? =
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    siteRepository: SiteRepository,
+    private val siteRepository: SiteRepository,
     private val locationProvider: LocationProvider,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -49,5 +50,9 @@ class MapViewModel @Inject constructor(
 
     private companion object {
         const val STOP_TIMEOUT_MS = 5_000L
+    }
+
+    fun setCaretaker(siteId: String, name: String, phone: String) {
+        viewModelScope.launch { siteRepository.setCaretaker(siteId, name, phone) }
     }
 }

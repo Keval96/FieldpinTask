@@ -21,6 +21,8 @@ data class Site(
     val version: Int,
     val updatedAt: Long,
     val syncState: SyncState,
+    val caretakerName: String? = null,
+    val caretakerPhone: String? = null,
 ) {
     val areaAcres: Double get() = GeoMath.squareMetersToAcres(areaSqM)
     val isPending: Boolean get() = syncState == SyncState.PENDING

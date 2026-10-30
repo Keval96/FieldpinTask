@@ -114,4 +114,9 @@
     <string name="inspection_attachments">Attachments</string>
     <string name="add_attachment">Attach a file</string>
     <string name="remove_attachment">Remove attachment</string>
+    <string name="caretaker_none">No caretaker set</string>
+    <string name="caretaker_value">Caretaker: %1$s, %2$s</string>
+    <string name="caretaker_set">Pick caretaker</string>
+    <string name="caretaker_change">Change</string>
+    <string name="caretaker_call">Call</string>
 </resources>

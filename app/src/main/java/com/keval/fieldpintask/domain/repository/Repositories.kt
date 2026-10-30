@@ -19,6 +19,7 @@ interface SiteRepository {
     fun observeSite(id: String): Flow<Site?>
     suspend fun seedIfEmpty()
     suspend fun createSite(name: String, category: String, boundary: List<LatLng>): Site
+    suspend fun setCaretaker(siteId: String, name: String?, phone: String?)
 }
 
 data class NewInspection(

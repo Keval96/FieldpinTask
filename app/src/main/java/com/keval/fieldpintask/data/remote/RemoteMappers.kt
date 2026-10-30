@@ -19,6 +19,8 @@ internal fun Site.toDto() = SiteDto(
     lastInspectionAt = lastInspectionAt,
     version = version,
     updatedAt = updatedAt,
+    caretakerName = caretakerName,
+    caretakerPhone = caretakerPhone,
 )
 
 internal fun SiteEntity.toDto() = SiteDto(
@@ -32,6 +34,8 @@ internal fun SiteEntity.toDto() = SiteDto(
     lastInspectionAt = lastInspectionAt,
     version = version,
     updatedAt = updatedAt,
+    caretakerName = caretakerName,
+    caretakerPhone = caretakerPhone,
 )
 
 internal fun SiteDto.toEntity() = SiteEntity(
@@ -46,6 +50,8 @@ internal fun SiteDto.toEntity() = SiteEntity(
     version = version,
     updatedAt = updatedAt,
     syncState = SyncState.SYNCED.name,
+    caretakerName = caretakerName,
+    caretakerPhone = caretakerPhone,
 )
 
 internal fun InspectionEntity.toDto() = InspectionDto(
