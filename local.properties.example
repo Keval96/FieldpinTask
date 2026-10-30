@@ -1,0 +1,11 @@
+## Copy this file to local.properties and adjust. local.properties is git-ignored.
+## sdk.dir is written by Android Studio automatically.
+sdk.dir=/path/to/Android/Sdk
+
+## FieldPin uses MapLibre with OpenStreetMap raster tiles, so no map API key is required.
+## If you switch to a keyed tile provider, put the key here and read it in app/build.gradle.kts:
+# MAP_API_KEY=your_key_here
+
+## Optional: override the mock-server base URLs per build type (defaults live in app/build.gradle.kts).
+# FIELDPIN_API_BASE_URL_DEBUG=
+# FIELDPIN_API_BASE_URL_RELEASE=

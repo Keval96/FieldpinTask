@@ -1,0 +1,31 @@
+# Build output
+build/
+/captures
+.gradle/
+.cxx/
+.externalNativeBuild/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Secrets and local config (never commit)
+local.properties
+*.jks
+*.keystore
+.env
+.env.*
+google-services.json
+keystore.properties
+
+# Logs
+*.log
+hs_err_pid*
+
+# Task brief (not part of the submission)
+TaskDetails.pdf
