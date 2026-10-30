@@ -8,6 +8,7 @@ import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.CloudOff
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.keval.fieldpintask.R
+import com.keval.fieldpintask.ui.common.shareGeoJson
 
 enum class MainTab { Sites, Map }
 
@@ -62,6 +64,10 @@ fun MainScaffold(
         }
     }
 
+    LaunchedEffect(viewModel) {
+        viewModel.exportFlow.collect { shareGeoJson(context, it, context.getString(R.string.export_title)) }
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -74,6 +80,9 @@ fun MainScaffold(
                             contentDescription = stringResource(R.string.offline),
                             modifier = Modifier.padding(end = 4.dp),
                         )
+                    }
+                    IconButton(onClick = viewModel::exportSites) {
+                        Icon(Icons.Filled.Share, contentDescription = stringResource(R.string.action_export))
                     }
                     IconButton(onClick = viewModel::syncNow, enabled = !state.isSyncing) {
                         if (state.isSyncing) {

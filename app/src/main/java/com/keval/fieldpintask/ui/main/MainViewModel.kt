@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.keval.fieldpintask.R
+import com.keval.fieldpintask.domain.export.GeoJsonExporter
 import com.keval.fieldpintask.domain.repository.AuthRepository
 import com.keval.fieldpintask.domain.repository.OfflineException
 import com.keval.fieldpintask.domain.repository.SiteRepository
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -42,6 +44,16 @@ class MainViewModel @Inject constructor(
     private val syncing = MutableStateFlow(false)
     private val messages = Channel<Message>(Channel.BUFFERED)
     val messageFlow: Flow<Message> = messages.receiveAsFlow()
+
+    private val exports = Channel<String>(Channel.BUFFERED)
+    val exportFlow: Flow<String> = exports.receiveAsFlow()
+
+    fun exportSites() {
+        viewModelScope.launch {
+            val sites = siteRepository.observeSites().first()
+            if (sites.isEmpty()) messages.send(Message(R.string.export_empty)) else exports.send(GeoJsonExporter.export(sites))
+        }
+    }
 
     val state: StateFlow<MainUiState> = combine(
         syncRepository.pendingCount,
