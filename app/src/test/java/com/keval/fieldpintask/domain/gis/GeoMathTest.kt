@@ -140,4 +140,22 @@ class GeoMathTest {
         val point = LatLng(ne.latitude + 30.0 / metersPerDegree, ne.longitude + 40.0 / (metersPerDegree * cos(Math.toRadians(ne.latitude))))
         assertEquals(50.0, GeoMath.distanceToPolygonMeters(point, square100), 1.0)
     }
+
+    // ---- self intersection ----
+
+    @Test fun `simple polygons do not intersect themselves`() {
+        assertFalse(GeoMath.isSelfIntersecting(square100))
+        assertFalse(GeoMath.isSelfIntersecting(lShape))
+        assertFalse(GeoMath.isSelfIntersecting(square100.take(3)))
+    }
+
+    @Test fun `bow tie crosses itself`() {
+        val bowTie = listOf(LatLng(0.0, 0.0), LatLng(0.01, 0.01), LatLng(0.0, 0.01), LatLng(0.01, 0.0))
+        assertTrue(GeoMath.isSelfIntersecting(bowTie))
+    }
+
+    @Test fun `ring that touches its own edge counts as crossing`() {
+        val touching = listOf(LatLng(0.0, 0.0), LatLng(0.0, 0.02), LatLng(0.01, 0.01), LatLng(-0.01, 0.01))
+        assertTrue(GeoMath.isSelfIntersecting(touching))
+    }
 }

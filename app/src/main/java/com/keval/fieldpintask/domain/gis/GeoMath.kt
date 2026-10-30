@@ -84,6 +84,36 @@ object GeoMath {
         }
     }
 
+    /** True when any two non-adjacent edges of the closed ring cross or touch. */
+    fun isSelfIntersecting(ring: List<LatLng>): Boolean {
+        val n = ring.size
+        if (n < 4) return false
+        for (i in 0 until n) {
+            for (j in i + 1 until n) {
+                val adjacent = j == i + 1 || (i == 0 && j == n - 1)
+                if (!adjacent && segmentsIntersect(ring[i], ring[(i + 1) % n], ring[j], ring[(j + 1) % n])) return true
+            }
+        }
+        return false
+    }
+
+    private fun segmentsIntersect(a: LatLng, b: LatLng, c: LatLng, d: LatLng): Boolean {
+        val d1 = cross(c, d, a)
+        val d2 = cross(c, d, b)
+        val d3 = cross(a, b, c)
+        val d4 = cross(a, b, d)
+        if (d1 * d2 < 0 && d3 * d4 < 0) return true
+        return (d1 == 0.0 && onSegment(c, d, a)) || (d2 == 0.0 && onSegment(c, d, b)) ||
+            (d3 == 0.0 && onSegment(a, b, c)) || (d4 == 0.0 && onSegment(a, b, d))
+    }
+
+    private fun cross(p: LatLng, q: LatLng, r: LatLng): Double =
+        (q.longitude - p.longitude) * (r.latitude - p.latitude) - (q.latitude - p.latitude) * (r.longitude - p.longitude)
+
+    private fun onSegment(p: LatLng, q: LatLng, r: LatLng): Boolean =
+        r.longitude in min(p.longitude, q.longitude)..max(p.longitude, q.longitude) &&
+            r.latitude in min(p.latitude, q.latitude)..max(p.latitude, q.latitude)
+
     private fun distanceToSegmentFromOrigin(ax: Double, ay: Double, bx: Double, by: Double): Double {
         val dx = bx - ax
         val dy = by - ay
