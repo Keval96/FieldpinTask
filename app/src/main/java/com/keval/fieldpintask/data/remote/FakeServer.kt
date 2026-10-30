@@ -18,7 +18,6 @@ import okio.Buffer
 class FakeServer @Inject constructor(private val json: Json) {
     private val sites = LinkedHashMap<String, SiteDto>()
     private val inspections = LinkedHashMap<String, InspectionDto>()
-    private val tokens = mutableSetOf<String>()
 
     init {
         SeedSites.create(System.currentTimeMillis()).forEach { sites[it.id] = it.toDto() }
@@ -39,14 +38,15 @@ class FakeServer @Inject constructor(private val json: Json) {
         if (body.email != BuildConfig.DEMO_EMAIL || body.password != BuildConfig.DEMO_PASSWORD) {
             return respond(request, 401, """{"error":"invalid credentials"}""")
         }
-        val token = UUID.randomUUID().toString().also(tokens::add)
+        val token = UUID.randomUUID().toString()
         val payload = LoginResponse(token, body.email, DISPLAY_NAME)
         return respond(request, 200, json.encodeToString(LoginResponse.serializer(), payload))
     }
 
     private fun sync(request: Request): Response {
         val token = request.header("Authorization")?.removePrefix("Bearer ")
-        if (token !in tokens) return respond(request, 401, """{"error":"unauthorized"}""")
+        // Tokens are stateless here so a saved session still works after the process restarts.
+        if (token.isNullOrBlank()) return respond(request, 401, """{"error":"unauthorized"}""")
         val body = json.decodeFromString<SyncRequest>(request.bodyText())
         val conflicts = SyncMerger.merge(sites, body.sites)
         body.inspections.forEach { inspections[it.id] = it }
