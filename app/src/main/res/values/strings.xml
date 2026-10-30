@@ -19,7 +19,7 @@
     <string name="action_logout">Sign out</string>
     <string name="offline">Offline</string>
     <string name="logout_title">Sign out?</string>
-    <string name="logout_message">Signing out removes all sites, inspections and photos from this device. Unsynced changes will be lost.</string>
+    <string name="logout_message">Signing out removes all sites, inspections, photos and attachments from this device. Unsynced changes will be lost.</string>
     <string name="logout_confirm">Sign out</string>
     <string name="cancel">Cancel</string>
 
