@@ -108,4 +108,7 @@
     <string name="action_export">Export GeoJSON</string>
     <string name="export_title">Share sites as GeoJSON</string>
     <string name="export_empty">No sites to export yet</string>
+    <string name="walk_mode">Walk mode</string>
+    <string name="walk_mode_on">Walk mode on: walk the boundary</string>
+    <string name="walk_poor_fix">Waiting for a better GPS fix (needs %1$d m or better)</string>
 </resources>

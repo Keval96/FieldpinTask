@@ -44,6 +44,7 @@ import com.keval.fieldpintask.ui.common.PermissionCard
 import com.keval.fieldpintask.ui.common.formatArea
 import com.keval.fieldpintask.ui.common.rememberLocationServicesEnabled
 import com.keval.fieldpintask.ui.common.rememberPermissionRequester
+import com.keval.fieldpintask.domain.location.WalkFilter
 import com.keval.fieldpintask.ui.map.CameraCommand
 import com.keval.fieldpintask.ui.map.CameraTarget
 import com.keval.fieldpintask.ui.map.FieldMap
@@ -69,6 +70,7 @@ fun NewSiteScreen(onBack: () -> Unit, viewModel: NewSiteViewModel = hiltViewMode
     LaunchedEffect(knownPoints.isNotEmpty()) {
         if (camera == null && knownPoints.isNotEmpty()) camera = CameraCommand(CameraTarget.Fit(knownPoints))
     }
+    LaunchedEffect(location) { viewModel.onWalkFix(location) }
     LaunchedEffect(viewModel) { viewModel.saved.collect { onBack() } }
 
     Scaffold(
@@ -117,6 +119,16 @@ fun NewSiteScreen(onBack: () -> Unit, viewModel: NewSiteViewModel = hiltViewMode
                         Text(stringResource(R.string.new_site_hint), color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     location?.let { Text(stringResource(R.string.new_site_accuracy, it.accuracyM.toInt()), style = MaterialTheme.typography.bodySmall) }
+                    FilterChip(
+                        selected = state.walking,
+                        onClick = viewModel::toggleWalk,
+                        enabled = location != null,
+                        label = { Text(stringResource(if (state.walking) R.string.walk_mode_on else R.string.walk_mode)) },
+                    )
+                    val poorFix = location?.let { it.accuracyM > WalkFilter.MAX_ACCURACY_M } == true
+                    if (state.walking && poorFix) {
+                        Text(stringResource(R.string.walk_poor_fix, WalkFilter.MAX_ACCURACY_M.toInt()), color = MaterialTheme.colorScheme.error)
+                    }
                     if (state.crossesItself) {
                         Text(stringResource(R.string.new_site_crossing), color = MaterialTheme.colorScheme.error)
                     }

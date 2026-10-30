@@ -6,6 +6,7 @@ import com.keval.fieldpintask.domain.gis.GeoMath
 import com.keval.fieldpintask.domain.gis.LatLng
 import com.keval.fieldpintask.domain.location.DeviceLocation
 import com.keval.fieldpintask.domain.location.LocationProvider
+import com.keval.fieldpintask.domain.location.WalkFilter
 import com.keval.fieldpintask.domain.repository.SiteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -28,6 +29,7 @@ data class NewSiteUiState(
     val perimeterM: Double = 0.0,
     val crossesItself: Boolean = false,
     val isSaving: Boolean = false,
+    val walking: Boolean = false,
 ) {
     val canSave: Boolean get() = points.size >= MIN_POINTS && !crossesItself && !isSaving
 }
@@ -53,6 +55,15 @@ class NewSiteViewModel @Inject constructor(
     fun locationUpdates(): Flow<DeviceLocation> = locationProvider.updates()
 
     fun addPoint(point: LatLng) = update { it + point }
+
+    fun toggleWalk() = _state.update { it.copy(walking = !it.walking) }
+
+    /** In walk mode every good-enough fix becomes a corner; poor or too-close fixes are dropped. */
+    fun onWalkFix(fix: DeviceLocation?) {
+        val current = _state.value
+        if (fix == null || !current.walking) return
+        if (WalkFilter.accept(fix, current.points.lastOrNull())) addPoint(fix.latLng)
+    }
 
     fun undo() = update { it.dropLast(1) }
 
