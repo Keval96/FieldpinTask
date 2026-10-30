@@ -2,10 +2,14 @@ package com.keval.fieldpintask.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val Green40 = Color(0xFF1B6B4A)
+val GreenGrey40 = Color(0xFF4D6357)
+val Teal40 = Color(0xFF3B6470)
+val Green80 = Color(0xFF8FD8AE)
+val GreenGrey80 = Color(0xFFB3CCBE)
+val Teal80 = Color(0xFFA3CDDB)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Fixed status colours so the map legend and list chips mean the same in light and dark.
+val StatusActive = Color(0xFF2E9E5B)
+val StatusNeedsRepair = Color(0xFFF2A62C)
+val StatusClosed = Color(0xFFD64545)

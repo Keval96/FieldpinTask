@@ -31,6 +31,8 @@ class SyncRepositoryImpl @Inject constructor(
         database.inspectionDao().observePendingCount(),
     ) { sites, inspections -> sites + inspections }
 
+    override val isOnline: Flow<Boolean> = networkMonitor.online
+
     override suspend fun sync(): Result<SyncSummary> = mutex.withLock {
         if (!networkMonitor.isOnline()) return Result.failure(OfflineException())
         try {

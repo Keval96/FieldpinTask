@@ -1,3 +1,45 @@
 <resources>
     <string name="app_name">FieldPin</string>
+
+    <!-- Login -->
+    <string name="login_title">FieldPin</string>
+    <string name="login_subtitle">Site inspections that work offline</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_button">Sign in</string>
+    <string name="login_use_demo">Use demo account</string>
+    <string name="login_error_empty">Enter your email and password</string>
+    <string name="login_error_invalid">Wrong email or password</string>
+    <string name="login_error_generic">Could not sign in. Try again.</string>
+
+    <!-- Navigation and top bar -->
+    <string name="tab_sites">Sites</string>
+    <string name="tab_map">Map</string>
+    <string name="action_sync">Sync now</string>
+    <string name="action_logout">Sign out</string>
+    <string name="offline">Offline</string>
+    <string name="logout_title">Sign out?</string>
+    <string name="logout_message">Signing out removes all sites, inspections and photos from this device. Unsynced changes will be lost.</string>
+    <string name="logout_confirm">Sign out</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Sync messages -->
+    <string name="sync_nothing">Everything is already synced</string>
+    <string name="sync_done">Synced %1$d sites and %2$d inspections</string>
+    <string name="sync_done_conflicts">Synced. %1$d sites changed elsewhere and were merged</string>
+    <string name="sync_offline">You are offline. Changes will sync when you are back online.</string>
+    <string name="sync_failed">Sync failed. Try again.</string>
+
+    <!-- Sites list -->
+    <string name="sites_search">Search by name</string>
+    <string name="sites_filter_all">All</string>
+    <string name="sites_empty">No sites match your search</string>
+    <string name="sites_last_inspection">Last inspection: %1$s</string>
+    <string name="sites_never_inspected">Never inspected</string>
+    <string name="sites_add">Map a new site</string>
+    <string name="pending_sync">Pending sync</string>
+
+    <string name="status_active">Active</string>
+    <string name="status_needs_repair">Needs repair</string>
+    <string name="status_closed">Closed</string>
 </resources>

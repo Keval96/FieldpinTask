@@ -43,5 +43,6 @@ class OfflineException : Exception("No network connection")
 
 interface SyncRepository {
     val pendingCount: Flow<Int>
+    val isOnline: Flow<Boolean>
     suspend fun sync(): Result<SyncSummary>
 }
