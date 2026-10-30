@@ -89,15 +89,29 @@ Trade-off: last write wins can silently drop an edit, and it trusts device clock
 
 ## Tests
 
-`./gradlew testDebugUnitTest` runs 33 unit tests: area, perimeter, distance, point in polygon, edge cases and self-intersection (`GeoMathTest`); seed data validity; the sync merge and conflict rules; check-in decision; stamp text.
+`./gradlew testDebugUnitTest` runs the unit tests: area, perimeter, distance, point in polygon, edge cases and self-intersection (`GeoMathTest`); seed data validity; the sync merge and conflict rules; check-in decision; stamp text; GeoJSON export; the walk-mode filter.
+
+## Bonus features
+
+- **Reject self-crossing boundaries**: Save is disabled when the outline crosses itself (orientation test, unit tested).
+- **Walk mode**: on the new-site screen, walk the boundary and every GPS fix of 20 m accuracy or better, at least 5 m from the last corner, becomes a corner. Worse fixes are ignored (`WalkFilter`, unit tested).
+- **GeoJSON export**: the share button in the toolbar exports all sites as an RFC 7946 FeatureCollection (`[lng, lat]`, closed counter-clockwise rings) through the system share sheet, using a `FileProvider`.
+- **Attachments**: an inspection can carry files picked with the system document picker (SAF). They are copied into app storage so they work offline, and are deleted on logout.
+- **Caretaker from Contacts**: pick a phone entry for a site, and call it from the site sheet. It uses `ACTION_PICK`, which grants one-off access to the chosen row, so the app never asks for the Contacts permission. It is a normal site edit, so it goes through sync and conflict handling.
+- **WorkManager background sync**: a periodic job (15 minutes, the platform minimum) with a network constraint and exponential backoff. It does nothing when signed out. Workers are built through a Hilt-injected `WorkerFactory`.
+- **Dark mode**: a full green Material 3 scheme for light and dark, following the system setting.
+- **GitHub Actions**: `.github/workflows/android.yml` runs unit tests and builds the debug APK on every push.
+- Room schema moved from v1 to v3 with explicit migrations (no destructive fallback); the schema JSON files are committed.
 
 ## What I cut, and why
 
-Time went into the six required features and testing them on a device. Not done: walk mode, GeoJSON export, SAF attachments, WorkManager background sync, caretaker from Contacts, offline tiles, GitHub Actions workflow. Dark mode is not designed (the theme is a fixed light scheme). There are no instrumented or Compose UI tests.
+- **Offline map tiles**: OpenStreetMap's tile usage policy forbids bulk downloading from its public tile servers, so doing this properly needs a paid or self-hosted tile source, which is out of scope here. Tiles the map has already viewed are cached by MapLibre.
+- No instrumented or Compose UI tests, and the Room migrations are checked by hand against the exported schema rather than by a migration test.
+- Attachments and photos stay on the device; sync sends only their counts to the mock server.
 
 ## Next steps
 
-Field-level merge and a conflict screen, WorkManager sync with backoff, offline tile packs, a real backend, photo upload during sync, instrumented tests for the check-in flow, and a proper dark theme.
+Field-level merge and a conflict screen, offline tile packs from a licensed tile source, a real backend, photo and attachment upload during sync, instrumented tests for the check-in flow, and a proper dark theme.
 
 ## AI use
 
