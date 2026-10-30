@@ -10,11 +10,7 @@ import kotlin.math.min
 import kotlin.math.sin
 import kotlin.math.sqrt
 
-/**
- * Geodesic helpers that work on the earth's surface rather than on flat x/y.
- * The earth is modelled as a sphere (mean radius); for site-sized polygons the error
- * versus the WGS84 ellipsoid is well below 1 %.
- */
+/** Geodesic helpers on a sphere (mean radius), not flat x/y. */
 object GeoMath {
     const val EARTH_RADIUS_M = 6_371_008.8
     const val SQUARE_METERS_PER_ACRE = 4_046.8564224
@@ -37,11 +33,7 @@ object GeoMath {
         return ring.indices.sumOf { i -> distanceMeters(ring[i], ring[(i + 1) % ring.size]) }
     }
 
-    /**
-     * Area of the ring in square metres on the sphere (Chamberlain-Duquette):
-     * A = R^2 / 2 * |sum((lng2 - lng1) * (2 + sin(lat1) + sin(lat2)))|.
-     * Independent of winding order. Returns 0 for fewer than 3 points.
-     */
+    /** Spherical polygon area (Chamberlain-Duquette), any winding order; 0 below 3 points. */
     fun areaSquareMeters(ring: List<LatLng>): Double {
         if (ring.size < 3) return 0.0
         var sum = 0.0
@@ -56,13 +48,8 @@ object GeoMath {
 
     fun squareMetersToAcres(squareMeters: Double): Double = squareMeters / SQUARE_METERS_PER_ACRE
 
-    /**
-     * Ray-casting point-in-polygon test. Works for concave polygons; the ring is implicitly closed.
-     * Uses lat/lng as planar coordinates, which is exact enough for polygons far smaller than the
-     * planet and does not misbehave away from the equator, as only comparisons are made.
-     * Points exactly on an edge are not guaranteed either way; callers should treat GPS
-     * accuracy as the real tolerance.
-     */
+    /** Ray-casting point-in-polygon, safe for concave rings. Points exactly on an edge are
+     *  undefined, so GPS accuracy is the real tolerance. */
     fun isInside(point: LatLng, ring: List<LatLng>): Boolean {
         if (ring.size < 3) return false
         var inside = false
@@ -81,11 +68,8 @@ object GeoMath {
         return inside
     }
 
-    /**
-     * Shortest distance in metres from [point] to the polygon boundary, or 0 when inside.
-     * Edges are measured in a local flat projection centred on the point, which is accurate
-     * for the short distances involved.
-     */
+    /** Metres from [point] to the nearest edge, 0 when inside. Uses a local flat projection
+     *  centred on the point, fine at short range. */
     fun distanceToPolygonMeters(point: LatLng, ring: List<LatLng>): Double {
         if (ring.isEmpty()) return Double.POSITIVE_INFINITY
         if (isInside(point, ring)) return 0.0
