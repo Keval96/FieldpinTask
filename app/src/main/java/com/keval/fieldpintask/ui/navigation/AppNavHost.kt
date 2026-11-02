@@ -44,7 +44,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
         composable(Routes.SITES) {
             MainScaffold(
                 selected = MainTab.Sites,
-                onTabSelected = { navController.switchTab(it) },
+                onTabSelected = { navController.switchTab(it, MainTab.Sites) },
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
                         onClick = { navController.navigate(Routes.NEW_SITE) },
@@ -60,7 +60,7 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
             route = Routes.MAP,
             arguments = listOf(navArgument(Routes.ARG_SITE_ID) { type = NavType.StringType; nullable = true; defaultValue = null }),
         ) {
-            MainScaffold(selected = MainTab.Map, onTabSelected = { navController.switchTab(it) }) {
+            MainScaffold(selected = MainTab.Map, onTabSelected = { navController.switchTab(it, MainTab.Map) }) {
                 MapScreen(onStartInspection = { id -> navController.navigate(Routes.inspection(id)) })
             }
         }
@@ -90,11 +90,12 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
     }
 }
 
-private fun NavHostController.switchTab(tab: MainTab) {
+// Tabs are rebuilt each time: restoring saved state revived a dead map screen.
+private fun NavHostController.switchTab(tab: MainTab, current: MainTab) {
+    if (tab == current) return
     val route = if (tab == MainTab.Sites) Routes.SITES else Routes.map()
     navigate(route) {
-        popUpTo(Routes.SITES) { saveState = true }
+        popUpTo(Routes.SITES)
         launchSingleTop = true
-        restoreState = true
     }
 }
