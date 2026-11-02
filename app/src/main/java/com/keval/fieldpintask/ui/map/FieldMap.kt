@@ -71,16 +71,25 @@ fun FieldMap(
     }
 
     LaunchedEffect(style, sites, selectedSiteId) {
-        style?.let { MapStyle.updateSites(it, sites, selectedSiteId) { site -> site.status.color } }
+        style?.withLiveStyle { MapStyle.updateSites(it, sites, selectedSiteId) { site -> site.status.color } }
     }
-    LaunchedEffect(style, draftPoints, draftValid) { style?.let { MapStyle.updateDraft(it, draftPoints, draftValid) } }
-    LaunchedEffect(style, userLocation) { style?.let { MapStyle.updateUser(it, userLocation) } }
+    LaunchedEffect(style, draftPoints, draftValid) { style?.withLiveStyle { MapStyle.updateDraft(it, draftPoints, draftValid) } }
+    LaunchedEffect(style, userLocation) { style?.withLiveStyle { MapStyle.updateUser(it, userLocation) } }
     LaunchedEffect(map, cameraCommand) {
         val target = cameraCommand?.target ?: return@LaunchedEffect
         map?.moveCamera(target)
     }
 
     AndroidView(factory = { mapView }, modifier = modifier)
+}
+
+/** MapLibre throws if a Style is used after the map was torn down or restyled; skip those updates. */
+private fun Style.withLiveStyle(block: (Style) -> Unit) {
+    if (!isFullyLoaded) return
+    try {
+        block(this)
+    } catch (_: IllegalStateException) {
+    }
 }
 
 private fun MapLibreMap.moveCamera(target: CameraTarget) {
